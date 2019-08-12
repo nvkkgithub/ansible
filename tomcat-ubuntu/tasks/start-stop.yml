@@ -1,7 +1,0 @@
-- name: Start Tomcat
-  systemd:
-    name: tomcat
-    enabled: yes
-    state: '{{action_type}}'
-  become: yes
-  when: action_type is defined
