@@ -1,0 +1,15 @@
+---
+# tasks file for ansible-tomcat
+
+# Expected 'action_type' param from ansible-play.
+- include: "install.yml"
+  when: action_type == "install"
+
+- include: "uninstall.yml"
+  when: action_type == "uninstall"
+
+- include: "reinstall.yml"
+  when: action_type == "reinstall"
+
+- include: "start-stop.yml"
+  when: (action_type == "started" or action_type == "stopped" or action_type == "restarted")

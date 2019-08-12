@@ -1,0 +1,16 @@
+---
+# defaults file for tomcat-ubuntu
+action_type: reinstall
+
+# Java installation path. Update the path as required.
+java_home: /usr/lib/java
+
+# Target installation of Tomcat. Updat the path as required.
+catalina_home: /usr/lib/tomcat
+
+tomcat_tmp_dir: /tmp/tomcat
+tomcat_dist_url: https://www-eu.apache.org/dist/tomcat/tomcat-8/v8.5.43/bin/apache-tomcat-8.5.43.tar.gz
+
+
+jenkins_tmp_dir: /tmp/jenkins
+jenkins_dist_url: https://updates.jenkins-ci.org/download/war/2.189/jenkins.war

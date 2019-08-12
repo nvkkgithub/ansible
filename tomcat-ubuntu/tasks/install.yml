@@ -1,0 +1,52 @@
+- name: Creating Tomcat directories
+  file: 
+    path: "{{ item }}"
+    state: directory
+    mode: 0755
+  with_items:
+  - "{{ catalina_home }}"
+  - "{{ tomcat_tmp_dir }}"
+  
+- name: Download the Tomcat Distribution
+  shell: "cd {{tomcat_tmp_dir}} && wget {{tomcat_dist_url}}"
+  become: yes
+  args:
+    executable: /bin/bash
+    warn: false
+    
+- name: Extract Java Distribution
+  shell: "cd {{tomcat_tmp_dir}} && tar -zxf *.tar.gz"
+  become: yes
+  args:
+    executable: /bin/bash
+    warn: false
+  
+- name: Move To '{{ java_home }}'
+  shell: "mv {{tomcat_tmp_dir}}/apache*/* {{ catalina_home }}/"
+  become: yes
+  args:
+    executable: /bin/bash
+    warn: false
+
+- name: Cleanup Temp
+  file:
+    dest: '{{ tomcat_tmp_dir }}/'
+    state: "absent"
+
+- name: Set Environment
+  shell: "echo CATALINA_HOME={{ catalina_home }} >> /home/ubuntu/.profile"
+  become: yes  
+  args:
+    executable: /bin/bash
+
+- name: Set Persmissions
+  shell: "chmod -R 777 {{ catalina_home }}/"
+  become: yes  
+  args:
+    executable: /bin/bash
+
+- name: Copying Tomcat Service
+  copy:
+    src: "files/tomcat.service"
+    dest: "/etc/systemd/system/"
+    mode: 0777

@@ -1,0 +1,22 @@
+[Unit]
+Description=Apache Tomcat Container
+After=syslog.target network.target
+ConditionPathExists=/usr/lib/java
+
+[Service]
+Type=forking
+
+Environment=JAVA_HOME=/usr/lib/java
+Environment=CATALINA_PID=/usr/lib/tomcat/temp/tomcat.pid
+Environment=CATALINA_HOME=/usr/lib/tomcat
+Environment=CATALINA_BASE=/usr/lib/tomcat
+Environment='CATALINA_OPTS=-Xms512M -Xmx1024M -server -XX:+UseParallelGC'
+
+ExecStart=/usr/lib/tomcat/bin/startup.sh
+ExecStop=/bin/kill -15 $MAINPID
+
+User=ubuntu
+Group=ubuntu
+
+[Install]
+WantedBy=multi-user.target
