@@ -1,0 +1,13 @@
+- name: Stop Tomcat
+  shell: "export JAVA_HOME={{java_home}} && cd {{ catalina_home }}/bin && ./shutdown.sh && sleep 3"
+  become: yes  
+  args:
+    executable: /bin/bash
+
+- name: Removing Tomcat
+  file:
+    path: "{{ item }}"
+    state: absent
+  with_items:
+  - "{{ tomcat_tmp_dir }}"
+  - "{{ catalina_home }}"

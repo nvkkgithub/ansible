@@ -1,0 +1,74 @@
+- name: Start/Stop Tomcat
+  systemd:
+    name: tomcat
+    enabled: yes
+    state: '{{to_state}}'
+  become: yes
+  tags:
+    - start_stop  
+  
+- name: Stop Tomcat
+  systemd:
+    name: tomcat
+    enabled: yes
+    state: stopped
+  become: yes
+  tags:
+    - deploy_jenkins  
+
+- name: Creating Jenkins Temporary
+  file: 
+    path: "{{ item }}"
+    state: directory
+    mode: 0755
+  with_items:
+  - "{{ jenkins_tmp_dir }}"
+  tags:
+    - deploy_jenkins  
+
+- name: Download Jenkins
+  shell: "cd {{jenkins_tmp_dir}} && wget {{jenkins_dist_url}}"
+  become: yes
+  args:
+    executable: /bin/bash
+    warn: false
+  tags:
+    - deploy_jenkins
+
+- name: Deploy to Tomcat
+  shell: "mv {{jenkins_tmp_dir}}/jenkins.war {{catalina_home}}/webapps/"
+  become: yes
+  args:
+    executable: /bin/bash
+    warn: false
+  tags:
+    - deploy_jenkins
+
+- name: Restart Tomcat
+  systemd:
+    name: tomcat
+    enabled: yes
+    state: started
+  become: yes
+  tags:
+    - deploy_jenkins
+  
+- name: Getting Jenkins Password
+  shell: "sleep 3 && curl http://localhost:8080/jenkins && sleep 5"
+  become: yes
+  args:
+    executable: /bin/bash
+    warn: false
+  tags:
+    - deploy_jenkins  
+  
+- name: Here is Jenkins Password
+  command: "cat /home/ubuntu/.jenkins/secrets/initialAdminPassword"
+  become: yes
+  register: jenkins_password
+  tags:
+    - deploy_jenkins  
+
+- debug: msg="{{ jenkins_password.stdout }}"
+  tags:
+    - deploy_jenkins  

@@ -1,0 +1,43 @@
+- name: Creating Java directories
+  file: 
+    path: "{{ item }}"
+    state: directory
+    mode: 0755
+  with_items:
+  - "{{ java_home }}"
+  
+- name: Creating Java Temp directory
+  file:
+    path: "{{ java_tmp_dir }}"
+    state: directory
+  
+- name: Copying Java Distribution
+  copy:
+    src: "{{java_src_dist_dir}}/{{ java_dist_file_name }}"
+    dest: "{{ java_tmp_dir }}/"
+    
+- name: Extract Java Distribution
+  shell: "tar -zxf {{ java_tmp_dir }}/{{ java_dist_file_name }} -C {{ java_home }}"
+  become: yes  
+  args:
+    executable: /bin/bash
+    warn: false
+
+- name: Move To '{{ java_home }}'
+  shell: "mv {{ java_home }}/jdk*/* {{ java_home }}/"
+  become: yes  
+  args:
+    executable: /bin/bash
+    warn: false
+
+- name: Cleanup Temp
+  file:
+    dest: '{{ java_tmp_dir }}/{{ java_dist_file_name }}'
+    state: "absent"
+
+- name: Setting Java environment variables
+  shell: "echo JAVA_HOME={{ java_home }} >> /home/ubuntu/.profile && echo PATH={{ java_home }}/bin:$PATH >> /home/ubuntu/.profile"
+  become: yes  
+  args:
+    executable: /bin/bash
+    warn: false

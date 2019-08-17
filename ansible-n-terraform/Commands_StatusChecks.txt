@@ -1,0 +1,50 @@
+============= Check Softwares  =============
+java -version
+echo $CATALINA_HOME
+service tomcat status
+ps -ef | grep java
+
+
+============= Install JAVA  =============
+
+ansible-playbook -i inventory sw-rollout-playbook.yml -e sw_name=java -e action_type=install
+
+
+============= Login to EC2 and Check Java Version  =============
+java -version
+
+
+============= Install Tomcat =============
+
+ansible-playbook -i inventory sw-rollout-playbook.yml -e sw_name=tomcat -e action_type=install
+
+
+============= Login to EC2 and check tomcat service is available.  =============
+echo $CATALINA_HOME
+service tomcat status
+
+============= Start/Stop Tomcat =============
+ansible-playbook -i inventory sw-rollout-playbook.yml -e sw_name=tomcat -e action_type=container -e to_state=started --tags start_stop
+
+
+============= Launch the browser URL =============
+https://<ec2-public-ip>:8080/
+
+https://<ec2-public-ip>:8080/jenkins -> Shouldn't work
+
+
+============= Deploy Jenkins onto Tomcat =============
+
+ansible-playbook -i inventory sw-rollout-playbook.yml -e sw_name=tomcat -e action_type=container --tags deploy_jenkins
+
+
+============= Launch the browser URL =============
+https://<ec2-public-ip>:8080/jenkins
+
+
+
+ansible-galaxy
+
+'nvkkgithub.tomcat_ubuntu' role will be used to configure tomcat as a service in ubuntu environment.
+
+$ ansible-galaxy install nvkkgithub.tomcat_ubuntu

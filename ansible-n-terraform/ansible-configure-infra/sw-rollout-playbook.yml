@@ -1,0 +1,20 @@
+---
+- name: "Install Softwares from Central Repo"
+  hosts: webservers
+  sudo: yes
+
+  vars_files:
+  - "roles/{{ sw_name }}/defaults/main.yml"  
+  
+  tasks:
+  - include: "roles/{{ sw_name }}/tasks/install.yml"
+    when: ("{{ action_type }}" == "install")
+    
+  - include: "roles/{{ sw_name }}/tasks/uninstall.yml"
+    when: ("{{ action_type }}" == "uninstall") 
+    
+  - include: "roles/{{ sw_name }}/tasks/main.yml"
+    when: ("{{ action_type }}" == "reinstall") 
+
+  - include: "roles/{{ sw_name }}/tasks/start.yml"
+    when: ("{{ action_type }}" == "container")

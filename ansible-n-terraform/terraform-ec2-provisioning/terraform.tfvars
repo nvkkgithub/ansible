@@ -1,0 +1,13 @@
+sw_install_commands="sleep 2"
+appln_port_range_to=8080
+appln_port_range_from=8080
+ami_key_pair_name="vk-ubuntu-ec2pair"
+ec2_ami_id="ami-05c1fa8df71875112"
+ec2_instance_type="t2.micro"
+ec2_tag_name="my-ansible_ubuntu"
+subnet_availability_zones="us-east-2b"
+cidr_block="10.0.0.0/16"
+subnet_name="test-ansible-ubuntu-subnet"
+vpc_name="test-ansible-ubuntu-vpc"
+region_name="us-east-2"
+current_environment="Test"

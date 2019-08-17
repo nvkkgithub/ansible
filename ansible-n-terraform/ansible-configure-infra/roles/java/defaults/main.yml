@@ -1,0 +1,5 @@
+---
+java_src_dist_dir: /home/ubuntu/software-dist/java
+java_dist_file_name: jdk-8u221-linux-x64.tar.gz
+java_home: /usr/lib/java
+java_tmp_dir: /tmp/java

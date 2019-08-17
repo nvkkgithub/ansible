@@ -1,0 +1,6 @@
+- name: Removing Java
+  file:
+    path: "{{ item }}"
+    state: absent
+  with_items:
+  - "{{ java_home }}"
